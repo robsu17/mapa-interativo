@@ -7,8 +7,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { classNames } from '@/utils/class-name.'
+import { useTenantStore } from '@/store/tenant'
 import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 const navigation = [
@@ -19,18 +20,29 @@ const navigation = [
 export function Navigation() {
   const { pathname } = useLocation()
 
-  const { data: tenants, isPending } = useQuery({
+  const { data: tenants, isLoading } = useQuery({
     queryKey: ['tentants'],
     queryFn: getTenants,
   })
 
+  const changeTenant = useTenantStore((state) => state.changeTenant)
+
+  useEffect(() => {
+    if (tenants) {
+      changeTenant(tenants[0].uuid)
+    }
+  }, [changeTenant, isLoading, tenants])
+
   return (
     <ul role="list" className="-mx-2 space-y-1">
       <div className="mb-10">
-        {isPending ? (
+        {isLoading ? (
           <Skeleton className="h-10 w-full" />
         ) : (
-          <Select defaultValue={tenants[0].uuid}>
+          <Select
+            defaultValue={tenants && tenants[0].uuid}
+            onValueChange={(value) => changeTenant(value)}
+          >
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
