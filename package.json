@@ -10,9 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@headlessui/react": "^2.0.4",
     "@heroicons/react": "^2.1.3",
     "@hookform/resolvers": "^3.6.0",
+    "@mui/material": "^5.15.20",
+    "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
@@ -21,6 +25,7 @@
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "event-source-polyfill": "^1.0.31",
     "js-cookie": "^3.0.5",
     "localforage": "^1.10.0",
     "lucide-react": "^0.395.0",
@@ -42,6 +47,7 @@
   "devDependencies": {
     "@rocketseat/eslint-config": "^2.2.2",
     "@tailwindcss/forms": "^0.5.7",
+    "@types/event-source-polyfill": "^1.0.5",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20.14.2",
     "@types/react": "^18.2.66",

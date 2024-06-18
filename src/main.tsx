@@ -1,19 +1,18 @@
 import ReactDOM from 'react-dom/client'
 import './globals.css'
-import { RouterProvider } from 'react-router-dom'
-import { router } from './routes.tsx'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 
 import { Toaster } from 'sonner'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './lib/react-query.ts'
+import { App } from './app.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <HelmetProvider>
     <Helmet titleTemplate="%s | Mapa Interativo" />
-    <Toaster expand richColors closeButton position="top-left" />
+    <Toaster richColors closeButton position="bottom-right" />
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <App />
     </QueryClientProvider>
   </HelmetProvider>,
 )

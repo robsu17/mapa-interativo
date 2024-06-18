@@ -1,4 +1,4 @@
-import { api } from '@/lib/axios'
+import axios from 'axios'
 
 interface SignInBody {
   email: string
@@ -13,7 +13,7 @@ export async function signIn({
   email,
   password,
 }: SignInBody): Promise<SignInResponse> {
-  const response = await api.post('/auth/sign-in', {
+  const response = await axios.post('/auth/sign-in', {
     email,
     password,
   })

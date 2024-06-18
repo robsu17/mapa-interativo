@@ -12,8 +12,8 @@ import { useMutation } from '@tanstack/react-query'
 import { signIn } from '@/api/sign-in'
 import { toast } from 'sonner'
 import axios, { AxiosError } from 'axios'
-import cookie from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from '@/store/auth'
 
 const loginFormSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -37,14 +37,21 @@ export function SignIn() {
     mutationFn: signIn,
   })
 
+  const login = useAuthStore((state) => state.login)
+
   async function handleLogin(data: LoginForm) {
     try {
-      const { accessToken } = await authenticate({
-        email: data.email,
-        password: data.password,
-      })
-
-      cookie.set('accessToken', accessToken)
+      await authenticate(
+        {
+          email: data.email,
+          password: data.password,
+        },
+        {
+          onSuccess({ accessToken }) {
+            login(accessToken)
+          },
+        },
+      )
 
       navigate('/', { replace: true })
     } catch (error) {
