@@ -23,6 +23,7 @@ export function ProductTable({ products }: ProductsProps) {
     <Table className="h-full">
       <TableHeader>
         <TableRow>
+          <TableHead className="w-[60px]"></TableHead>
           <TableHead className="w-[80px]">ID</TableHead>
           <TableHead className="w-[150px]">Nome</TableHead>
           <TableHead>Descrição</TableHead>

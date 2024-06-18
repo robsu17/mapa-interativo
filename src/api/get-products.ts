@@ -6,15 +6,25 @@ interface GetProductsParams {
   accessToken: string | null
 }
 
+interface GetProductsResponse {
+  products: Product[]
+  totalItems: number
+}
+
 export async function getProducts({
   tenantUuid,
   accessToken = null,
-}: GetProductsParams) {
-  const response = await api(accessToken).get<Product[]>('/products', {
+}: GetProductsParams): Promise<GetProductsResponse> {
+  const { data, headers } = await api(accessToken).get('/products', {
     params: {
       tenantUuid,
     },
   })
 
-  return response.data
+  const totalItems = headers['x-total-count']
+
+  return {
+    products: data,
+    totalItems,
+  }
 }

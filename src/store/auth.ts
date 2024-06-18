@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { isExpired } from 'react-jwt'
 
 type TenantStore = {
   isAuthenticated: boolean
@@ -22,11 +23,20 @@ export const useAuthStore = create<TenantStore>((set) => ({
   initializeAuth: () => {
     const accessToken = localStorage.getItem('accessToken')
 
-    if (accessToken) {
-      set({
-        isAuthenticated: true,
-        accessToken,
-      })
+    if (!accessToken) {
+      return
     }
+
+    const isExpiredAccessToken = isExpired(accessToken)
+
+    if (isExpiredAccessToken) {
+      localStorage.removeItem('accessToken')
+      return
+    }
+
+    set({
+      isAuthenticated: true,
+      accessToken,
+    })
   },
 }))
