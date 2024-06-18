@@ -9,13 +9,18 @@ import { Button } from '@/components/ui/button'
 import { CirclePlus } from 'lucide-react'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { NewProduct } from './utils/new-product'
+import { useAuthStore } from '@/store/auth'
 
 export function Products() {
   const tenantUuid = useTenantStore((state) => state.tenantUuid)
+  const accessToken = useAuthStore((state) => state.accessToken)
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
   const { data: products, isLoading: isLoadingProducts } = useQuery({
-    queryKey: ['products', tenantUuid],
-    queryFn: () => getProducts({ tenantUuid }),
+    queryKey: ['products', tenantUuid, accessToken],
+    queryFn: () => getProducts({ tenantUuid, accessToken }),
+    enabled: isAuthenticated,
+    staleTime: Infinity,
   })
 
   return (
@@ -23,6 +28,7 @@ export function Products() {
       <Helmet title="Pedidos" />
       <div className="flex items-center justify-between gap-4">
         <h1 className="text-3xl font-bold tracking-tighter">Produtos</h1>
+        {isAuthenticated ? 'true' : 'false'}
         <Dialog>
           <DialogTrigger asChild>
             <Button
@@ -45,7 +51,7 @@ export function Products() {
               <Loading />
             </div>
           ) : (
-            <ProductTable products={products} />
+            products && <ProductTable products={products} />
           )}
         </div>
 

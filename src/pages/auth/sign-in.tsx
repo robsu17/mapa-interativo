@@ -8,12 +8,12 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { useMutation } from '@tanstack/react-query'
-import { signIn } from '@/api/sign-in'
 import { toast } from 'sonner'
 import axios, { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/store/auth'
+import { useMutation } from '@tanstack/react-query'
+import { signIn } from '@/api/sign-in'
 
 const loginFormSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -33,39 +33,30 @@ export function SignIn() {
     resolver: zodResolver(loginFormSchema),
   })
 
-  const { mutateAsync: authenticate, isPending } = useMutation({
-    mutationFn: signIn,
-  })
-
   const login = useAuthStore((state) => state.login)
 
-  async function handleLogin(data: LoginForm) {
-    try {
-      await authenticate(
-        {
-          email: data.email,
-          password: data.password,
-        },
-        {
-          onSuccess({ accessToken }) {
-            login(accessToken)
-          },
-        },
-      )
-
+  const { mutateAsync: signInFn, isPending } = useMutation({
+    mutationFn: signIn,
+    onSuccess({ accessToken }) {
+      login(accessToken)
       navigate('/', { replace: true })
-    } catch (error) {
+    },
+    onError(error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError
         if (axiosError.response && axiosError.response.status === 401) {
           toast.error('Credênciais inválidas.')
+        } else {
+          toast.error(
+            'Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.',
+          )
         }
-      } else {
-        toast.error(
-          'Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.',
-        )
       }
-    }
+    },
+  })
+
+  async function handleLogin(data: LoginForm) {
+    await signInFn({ email: data.email, password: data.password })
   }
 
   return (

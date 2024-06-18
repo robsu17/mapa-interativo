@@ -7,6 +7,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useAuthStore } from '@/store/auth'
 import { useTenantStore } from '@/store/tenant'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
@@ -20,9 +21,11 @@ const navigation = [
 export function Navigation() {
   const { pathname } = useLocation()
 
+  const accessToken = useAuthStore((state) => state.accessToken)
+
   const { data: tenants, isLoading } = useQuery({
-    queryKey: ['tentants'],
-    queryFn: getTenants,
+    queryKey: ['tentants', accessToken],
+    queryFn: () => getTenants({ accessToken }),
   })
 
   const changeTenant = useTenantStore((state) => state.changeTenant)

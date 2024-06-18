@@ -7,9 +7,11 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useAuthStore } from '@/store/auth'
+import { Product } from '@/store/products'
 import { useTenantStore } from '@/store/tenant'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -23,7 +25,10 @@ const newProductSchema = z.object({
 type NewProduct = z.infer<typeof newProductSchema>
 
 export function NewProduct() {
+  const queryClient = useQueryClient()
+
   const tenantUuid = useTenantStore((state) => state.tenantUuid)
+  const accessToken = useAuthStore((state) => state.accessToken)
 
   const {
     register,
@@ -33,23 +38,37 @@ export function NewProduct() {
     resolver: zodResolver(newProductSchema),
   })
 
-  const { mutateAsync: newProductFn } = useMutation({
+  const { mutateAsync: newProductFn, isPending } = useMutation({
     mutationFn: newProduct,
+    onSuccess(data) {
+      const cached = queryClient.getQueryData<Product[]>([
+        'products',
+        tenantUuid,
+        accessToken,
+      ])
+
+      if (cached) {
+        queryClient.setQueryData<Product[]>(
+          ['products', tenantUuid, accessToken],
+          [...cached, data],
+        )
+      }
+
+      toast.success('Produto adicionado com sucesso.')
+    },
+    onError() {
+      toast.error('Erro ao adicionar o produto.')
+    },
   })
 
   async function handleNewProduct(data: NewProduct) {
-    try {
-      await newProductFn({
-        name: data.name,
-        description: data.description,
-        price: data.price,
-        tenantUuid,
-      })
-
-      toast.success('Produto adicionado com sucesso.')
-    } catch (error) {
-      toast.error('Erro ao adicionar o produto.')
-    }
+    await newProductFn({
+      name: data.name,
+      description: data.description,
+      price: data.price,
+      tenantUuid,
+      accessToken,
+    })
   }
 
   return (
@@ -96,7 +115,9 @@ export function NewProduct() {
           <DialogClose asChild>
             <Button variant={'destructive'}>Cancelar</Button>
           </DialogClose>
-          <Button type="submit">Salvar</Button>
+          <Button disabled={isPending} type="submit">
+            Salvar
+          </Button>
         </div>
       </form>
     </DialogContent>

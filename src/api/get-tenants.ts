@@ -6,7 +6,11 @@ interface GetTenantsResponse {
   displayName: string
 }
 
-export async function getTenants() {
-  const response = await api.get<GetTenantsResponse[]>('/tenants')
+export async function getTenants({
+  accessToken,
+}: {
+  accessToken: string | null
+}) {
+  const response = await api(accessToken).get<GetTenantsResponse[]>('/tenants')
   return response.data
 }

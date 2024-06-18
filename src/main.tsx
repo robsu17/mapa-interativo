@@ -10,7 +10,7 @@ import { App } from './app.tsx'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <HelmetProvider>
     <Helmet titleTemplate="%s | Mapa Interativo" />
-    <Toaster richColors closeButton position="bottom-right" />
+    <Toaster richColors closeButton position="top-right" />
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>

@@ -5,20 +5,18 @@ import { Outlet } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { useAuthStore } from '@/store/auth'
 import Loading from '@/components/loading'
-import { useGetUserProfile } from '@/store/get-user-profile'
-import { useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { getProfile } from '@/api/get-profile'
 
 export function Dashboard() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
-  const getProfile = useGetUserProfile((state) => state.getUserInfo)
-  const profile = useGetUserProfile((state) => state.user)
-  const isLoading = useGetUserProfile((state) => state.isLoading)
+  const accessToken = useAuthStore((state) => state.accessToken)
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      getProfile()
-    }
-  }, [getProfile, isAuthenticated])
+  const { data: profile, isLoading } = useQuery({
+    queryKey: ['profile', accessToken],
+    queryFn: () => getProfile(accessToken),
+    enabled: isAuthenticated,
+  })
 
   return (
     <div>
