@@ -5,6 +5,7 @@ import { Dashboard } from './pages/dashboard'
 import { Products } from './pages/products'
 import { ProtectedRoute } from './pages/protected-route'
 import { NotProtectedRoute } from './pages/not-protected-route'
+import { Details } from './pages/products/details'
 
 export const router = createBrowserRouter([
   {
@@ -16,8 +17,12 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute element={<Dashboard />} />,
     children: [
       {
-        path: '/products',
+        path: 'products',
         element: <ProtectedRoute element={<Products />} />,
+      },
+      {
+        path: 'products/:id',
+        element: <ProtectedRoute element={<Details />} />,
       },
     ],
   },

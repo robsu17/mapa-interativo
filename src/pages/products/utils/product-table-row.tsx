@@ -21,7 +21,7 @@ export function ProductTableRow({ product }: ProductsRowProps) {
   return (
     <TableRow>
       <TableCell>
-        <Link to={`/${product.id}?${tenantUuid}`}>
+        <Link to={`/products/${product.id}?tenantUuid=${tenantUuid}`}>
           <Search className="h-4 w-4" />
         </Link>
       </TableCell>

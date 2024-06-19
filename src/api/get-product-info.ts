@@ -3,7 +3,7 @@ import { api } from '@/lib/axios'
 interface ProductParams {
   tenantUuid: string
   productId: string
-  accessToken: string
+  accessToken: string | null
 }
 
 interface ProductResponse {
@@ -21,7 +21,7 @@ export async function getProductInfo({
   accessToken,
 }: ProductParams) {
   const response = await api(accessToken).get<ProductResponse>(
-    `/products/${productId}?${tenantUuid}`,
+    `/products/${productId}?tenantUuid=${tenantUuid}`,
   )
   return response.data
 }
