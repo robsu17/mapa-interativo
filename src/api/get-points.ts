@@ -40,8 +40,8 @@ export async function getPoints({
   accessToken = null,
   coordinates,
   responseType = 'geojson',
-}: GetPointsParams): Promise<GetPointsResponse[]> {
-  const response = await api(accessToken).get(`/points`, {
+}: GetPointsParams) {
+  const response = await api(accessToken).get<GetPointsResponse[]>(`/points`, {
     params: {
       ul: formatCoordinates(coordinates.ul),
       bl: formatCoordinates(coordinates.bl),

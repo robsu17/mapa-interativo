@@ -1,10 +1,6 @@
-import {
-  Circle,
-  LayerGroup,
-  LayersControl,
-  MapContainer,
-  TileLayer,
-} from 'react-leaflet'
+import { MapContainer, TileLayer, Circle } from 'react-leaflet'
+
+import MarkerClusterGroup from 'react-leaflet-cluster'
 
 import 'leaflet/dist/leaflet.css'
 
@@ -25,10 +21,11 @@ export function MapPreview() {
   const [center, setCenter] = useState<LatLng>(
     new LatLng(-10.9197697, -37.0599079),
   )
+
   const [coordinatesCorners, setCoordinatesCorners] =
     useState<CoordinateCorners>(coordinates)
 
-  map?.on('dragend', async function onDragEnd() {
+  map?.on('dragend', function onDragEnd() {
     const coordinates = {
       ul: {
         lat: String(map?.getBounds().getNorthEast().lat),
@@ -47,11 +44,13 @@ export function MapPreview() {
         lng: String(map?.getBounds().getSouthWest().lng),
       },
     }
+
+    console.log(coordinates)
     setCoordinatesCorners(coordinates)
     setCenter(map.getCenter())
   })
 
-  useQuery({
+  const { data: points } = useQuery({
     queryKey: ['points', accessToken, coordinatesCorners, 'geojson'],
     queryFn: () => getPoints({ accessToken, coordinates: coordinatesCorners }),
     enabled: isAuthenticated,
@@ -63,22 +62,28 @@ export function MapPreview() {
         ref={(map) => setMap(map)}
         center={center}
         zoom={13}
-        className="flex h-[600px] w-full"
+        className="flex h-[700px] w-full"
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution="&copy; OpenStreetMap contributors"
           maxZoom={19}
         />
-        <LayersControl>
-          <LayerGroup>
-            <Circle
-              center={center}
-              pathOptions={{ fillColor: 'blue' }}
-              radius={200}
-            />
-          </LayerGroup>
-        </LayersControl>
+
+        <MarkerClusterGroup chunkedLoading>
+          {points &&
+            points.map((point, index) => {
+              const [longitude, latitude] = point.geometry.coordinates
+              return (
+                <Circle
+                  key={index}
+                  pathOptions={{ color: point.properties['marker-color'] }}
+                  center={[latitude, longitude]}
+                  radius={200}
+                />
+              )
+            })}
+        </MarkerClusterGroup>
       </MapContainer>
     </div>
   )
