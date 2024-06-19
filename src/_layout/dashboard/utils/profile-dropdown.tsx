@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/store/auth'
 import { classNames } from '@/utils/class-name.'
 import {
   MenuButton,
@@ -7,11 +8,6 @@ import {
   Menu,
 } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
-
-const userNavigation = [
-  { name: 'Your profile', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
 
 export interface Profile {
   firstName: string
@@ -30,6 +26,13 @@ interface ProfileProps {
 }
 
 export function Profile({ profile }: ProfileProps) {
+  const logout = useAuthStore((state) => state.logout)
+
+  const userNavigation = [
+    { name: 'Seu perfil', href: '#' },
+    { name: 'Sair', href: '#', action: () => logout() },
+  ]
+
   return (
     <Menu as="div" className="relative">
       <MenuButton className="-m-1.5 flex items-center p-1.5">
@@ -64,15 +67,16 @@ export function Profile({ profile }: ProfileProps) {
           {userNavigation.map((item) => (
             <MenuItem key={item.name}>
               {({ focus }) => (
-                <a
-                  href={item.href}
+                <button
+                  type="button"
+                  onClick={item.action}
                   className={classNames(
                     focus ? 'bg-gray-50' : '',
-                    'block px-3 py-1 text-sm leading-6 text-gray-900',
+                    'block w-full px-3 py-1 text-left text-sm leading-6 text-gray-900',
                   )}
                 >
                   {item.name}
-                </a>
+                </button>
               )}
             </MenuItem>
           ))}

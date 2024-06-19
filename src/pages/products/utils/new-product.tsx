@@ -29,6 +29,7 @@ export function NewProduct() {
 
   const tenantUuid = useTenantStore((state) => state.tenantUuid)
   const accessToken = useAuthStore((state) => state.accessToken)
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
   const {
     register,
@@ -41,17 +42,19 @@ export function NewProduct() {
   const { mutateAsync: newProductFn, isPending } = useMutation({
     mutationFn: newProduct,
     onSuccess(data) {
-      const cached = queryClient.getQueryData<Product[]>([
-        'products',
-        tenantUuid,
-        accessToken,
-      ])
+      const cached = queryClient.getQueryData<{
+        totalItems: number
+        products: Product[]
+      }>(['products', tenantUuid, accessToken])
 
       if (cached) {
-        queryClient.setQueryData<Product[]>(
-          ['products', tenantUuid, accessToken],
-          [...cached, data],
-        )
+        queryClient.setQueryData<{
+          totalItems: number
+          products: Product[]
+        }>(['products', tenantUuid, accessToken], {
+          totalItems: cached.totalItems + 1,
+          products: [...cached.products, data],
+        })
       }
 
       toast.success('Produto adicionado com sucesso.')
@@ -62,6 +65,11 @@ export function NewProduct() {
   })
 
   async function handleNewProduct(data: NewProduct) {
+    if (!isAuthenticated) {
+      toast.error('Você não está autenticado.')
+      return
+    }
+
     await newProductFn({
       name: data.name,
       description: data.description,

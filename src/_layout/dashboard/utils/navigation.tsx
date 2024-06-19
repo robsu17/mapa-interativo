@@ -22,10 +22,12 @@ export function Navigation() {
   const { pathname } = useLocation()
 
   const accessToken = useAuthStore((state) => state.accessToken)
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
   const { data: tenants, isLoading } = useQuery({
     queryKey: ['tentants', accessToken],
     queryFn: () => getTenants({ accessToken }),
+    enabled: isAuthenticated,
   })
 
   const changeTenant = useTenantStore((state) => state.changeTenant)
