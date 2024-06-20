@@ -14,6 +14,7 @@ import { useTenantStore } from '@/store/tenant'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { redirect, useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -26,6 +27,13 @@ const newProductSchema = z.object({
 type NewProduct = z.infer<typeof newProductSchema>
 
 export function NewProduct() {
+  const [searchParams] = useSearchParams()
+
+  const pageIndex = z.coerce
+    .number()
+    .transform((page) => page - 1)
+    .parse(searchParams.get('page') ?? '1')
+
   const queryClient = useQueryClient()
 
   const tenantUuid = useTenantStore((state) => state.tenantUuid)
@@ -47,13 +55,13 @@ export function NewProduct() {
       const cached = queryClient.getQueryData<{
         totalItems: number
         products: Product[]
-      }>(['products', tenantUuid, accessToken])
+      }>(['products', tenantUuid, accessToken, pageIndex])
 
-      if (cached) {
+      if (cached && cached.products.length < 10) {
         queryClient.setQueryData<{
           totalItems: number
           products: Product[]
-        }>(['products', tenantUuid, accessToken], {
+        }>(['products', tenantUuid, accessToken, pageIndex], {
           totalItems: cached.totalItems + 1,
           products: [...cached.products, data],
         })

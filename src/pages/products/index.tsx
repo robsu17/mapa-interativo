@@ -10,17 +10,33 @@ import { CirclePlus } from 'lucide-react'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { NewProduct } from './utils/new-product'
 import { useAuthStore } from '@/store/auth'
+import { useSearchParams } from 'react-router-dom'
+import { z } from 'zod'
 
 export function Products() {
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const pageIndex = z.coerce
+    .number()
+    .transform((page) => page - 1)
+    .parse(searchParams.get('page') ?? '1')
+
   const tenantUuid = useTenantStore((state) => state.tenantUuid)
   const accessToken = useAuthStore((state) => state.accessToken)
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
   const { data, isLoading: isLoadingProducts } = useQuery({
-    queryKey: ['products', tenantUuid, accessToken],
-    queryFn: () => getProducts({ tenantUuid, accessToken }),
+    queryKey: ['products', tenantUuid, accessToken, pageIndex],
+    queryFn: () => getProducts({ tenantUuid, accessToken, pageIndex }),
     enabled: !!tenantUuid && isAuthenticated,
   })
+
+  function handlePaginate(pageIndex: number) {
+    setSearchParams((prev) => {
+      prev.set('page', (pageIndex + 1).toString())
+      return prev
+    })
+  }
 
   return (
     <>
@@ -55,7 +71,14 @@ export function Products() {
         </div>
 
         <div>
-          <Pagination pageIndex={0} totalCount={0} perPage={0} />
+          {data && (
+            <Pagination
+              onPageChange={handlePaginate}
+              pageIndex={pageIndex}
+              totalCount={data?.totalItems || 0}
+              perPage={10}
+            />
+          )}
         </div>
       </div>
     </>

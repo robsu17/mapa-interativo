@@ -26,57 +26,56 @@ export function Notification() {
   const accessToken = useAuthStore((state) => state.accessToken)
 
   const [eventSource, setEventSource] = useState<EventSourcePolyfill>()
-  const [countMessages, setCountMessages] = useState(0)
 
-  useEffect(() => {
-    if (eventSource) {
-      eventSource.close()
-      clearMessages(tenantUuid)
-    }
+  // useEffect(() => {
+  //   if (eventSource) {
+  //     eventSource.close()
+  //     clearMessages(tenantUuid)
+  //   }
 
-    if (!isAuthenticated) {
-      return
-    }
+  //   if (!isAuthenticated) {
+  //     return
+  //   }
 
-    if (!tenantUuid) {
-      return
-    }
+  //   if (!tenantUuid) {
+  //     return
+  //   }
 
-    const newEventSourceFill = new EventSourcePolyfill(
-      `${env.VITE_API_URL}/notify/${tenantUuid}/events`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    )
+  //   const newEventSourceFill = new EventSourcePolyfill(
+  //     `${env.VITE_API_URL}/notify/${tenantUuid}/events`,
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     },
+  //   )
 
-    newEventSourceFill.onmessage = (event) => {
-      const data = JSON.parse(event.data)
-      const message = {
-        tenantUuid,
-        title: data.event,
-        text: data.message,
-      }
-      setMessages(message)
-    }
+  //   newEventSourceFill.onmessage = (event) => {
+  //     const data = JSON.parse(event.data)
+  //     const message = {
+  //       tenantUuid,
+  //       title: data.event,
+  //       text: data.message,
+  //     }
+  //     setMessages(message)
+  //   }
 
-    newEventSourceFill.onerror = () => {
-      newEventSourceFill.close()
-    }
+  //   newEventSourceFill.onerror = () => {
+  //     newEventSourceFill.close()
+  //   }
 
-    setEventSource(newEventSourceFill)
+  //   setEventSource(newEventSourceFill)
 
-    return () => {
-      if (eventSource) {
-        eventSource.close()
-      }
-    }
-  }, [tenantUuid, isAuthenticated])
+  //   return () => {
+  //     if (eventSource) {
+  //       eventSource.close()
+  //     }
+  //   }
+  // }, [tenantUuid, isAuthenticated])
 
-  const filteredMessages = messages
-    .filter((message) => message.tenantUuid === tenantUuid)
-    .slice(-5)
+  // const filteredMessages = messages
+  //   .filter((message) => message.tenantUuid === tenantUuid)
+  //   .slice(-5)
 
   return (
     <DropdownMenu>
@@ -93,7 +92,7 @@ export function Notification() {
           Notificações
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {filteredMessages.map((message, index) => {
+        {/* {filteredMessages.map((message, index) => {
           if (message.tenantUuid === tenantUuid) {
             return (
               <div
@@ -122,7 +121,7 @@ export function Notification() {
             )
           }
           return undefined
-        })}
+        })} */}
         {messages.filter((message) => message.tenantUuid === tenantUuid)
           .length >= 100 && (
           <DropdownMenuItem className="font-semibold text-yellow-500">
