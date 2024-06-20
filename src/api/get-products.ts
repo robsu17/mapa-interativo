@@ -21,7 +21,7 @@ export async function getProducts({
     },
   })
 
-  const totalItems = headers['x-total-count']
+  const totalItems = headers['X-Total-Count']
 
   return {
     products: data,

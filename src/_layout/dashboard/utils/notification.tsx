@@ -13,7 +13,6 @@ import { Bell, BellRing, X } from 'lucide-react'
 import { env } from '@/env'
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '@/store/auth'
-import console from 'console'
 
 export function Notification() {
   const messages = useMessagesStore((state) => state.messages)
@@ -60,7 +59,6 @@ export function Notification() {
         text: data.message,
       }
       setMessages(message)
-      setCountMessages(countMessages + 1)
     }
 
     newEventSourceFill.onerror = () => {

@@ -10,19 +10,5 @@ export const api = (accessToken: string | null = null) => {
     },
   })
 
-  api.interceptors.request.use(
-    (response) => response,
-    (error) => {
-      const logout = useAuthStore((state) => state.logout)
-
-      if (axios.isAxiosError(error)) {
-        if (error.code === '401') {
-          logout()
-        }
-      }
-      return Promise.reject(error)
-    },
-  )
-
   return api
 }
