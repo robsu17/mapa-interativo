@@ -1,5 +1,5 @@
 import { env } from '@/env'
-import { useGlobalAxiosErrorStore } from '@/store/global-axios-error-store'
+import { useAuthStore } from '@/store/auth'
 import axios from 'axios'
 
 export const api = (accessToken: string | null = null) => {
@@ -11,10 +11,15 @@ export const api = (accessToken: string | null = null) => {
   })
 
   api.interceptors.request.use(
-    (request) => request,
+    (response) => response,
     (error) => {
-      const setError = useGlobalAxiosErrorStore((state) => state.setError)
-      setError(error)
+      const logout = useAuthStore((state) => state.logout)
+
+      if (axios.isAxiosError(error)) {
+        if (error.code === '401') {
+          logout()
+        }
+      }
       return Promise.reject(error)
     },
   )

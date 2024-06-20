@@ -23,14 +23,13 @@ export function Navigation() {
 
   const accessToken = useAuthStore((state) => state.accessToken)
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const changeTenant = useTenantStore((state) => state.changeTenant)
 
   const { data: tenants, isLoading } = useQuery({
     queryKey: ['tentants', accessToken],
     queryFn: () => getTenants({ accessToken }),
     enabled: isAuthenticated,
   })
-
-  const changeTenant = useTenantStore((state) => state.changeTenant)
 
   useEffect(() => {
     if (tenants) {

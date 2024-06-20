@@ -11,6 +11,7 @@ import { LatLng, Map } from 'leaflet'
 import { CoordinateCorners, getPoints } from '@/api/get-points'
 import { useAuthStore } from '@/store/auth'
 import { useQuery } from '@tanstack/react-query'
+import { getCornersCoordinates } from '../data/get-corners-coordinates'
 
 export function MapPreview() {
   const accessToken = useAuthStore((state) => state.accessToken)
@@ -26,26 +27,7 @@ export function MapPreview() {
     useState<CoordinateCorners>(coordinates)
 
   map?.on('dragend', function onDragEnd() {
-    const coordinates = {
-      ul: {
-        lat: String(map?.getBounds().getNorthEast().lat),
-        lng: String(map?.getBounds().getNorthEast().lng),
-      },
-      bl: {
-        lat: String(map?.getBounds().getSouthEast().lat),
-        lng: String(map?.getBounds().getSouthEast().lng),
-      },
-      ur: {
-        lat: String(map?.getBounds().getNorthWest().lat),
-        lng: String(map?.getBounds().getNorthWest().lng),
-      },
-      br: {
-        lat: String(map?.getBounds().getSouthWest().lat),
-        lng: String(map?.getBounds().getSouthWest().lng),
-      },
-    }
-
-    console.log(coordinates)
+    const coordinates = getCornersCoordinates(map)
     setCoordinatesCorners(coordinates)
     setCenter(map.getCenter())
   })
@@ -62,7 +44,7 @@ export function MapPreview() {
         ref={(map) => setMap(map)}
         center={center}
         zoom={13}
-        className="flex h-[700px] w-full"
+        className="z-0 flex h-[700px] w-full rounded border border-border shadow-md"
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -79,7 +61,7 @@ export function MapPreview() {
                   key={index}
                   pathOptions={{ color: point.properties['marker-color'] }}
                   center={[latitude, longitude]}
-                  radius={200}
+                  radius={100}
                 />
               )
             })}

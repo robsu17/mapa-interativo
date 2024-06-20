@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { useAuthStore } from '@/store/auth'
 import { Product } from '@/store/products'
 import { useTenantStore } from '@/store/tenant'
@@ -35,6 +36,7 @@ export function NewProduct() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<NewProduct>({
     resolver: zodResolver(newProductSchema),
   })
@@ -77,6 +79,12 @@ export function NewProduct() {
       tenantUuid,
       accessToken,
     })
+
+    reset({
+      name: '',
+      description: '',
+      price: 0,
+    })
   }
 
   return (
@@ -99,11 +107,10 @@ export function NewProduct() {
           <Label className="text-rose-500" htmlFor="description">
             {errors.description && errors.description.message}
           </Label>
-          <Input
+          <Textarea
             id="name"
-            type="text"
             placeholder="Descrição do produto"
-            className="mt-1"
+            className="mt-1 h-24"
             {...register('description')}
           />
         </div>
