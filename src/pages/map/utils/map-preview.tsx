@@ -32,10 +32,17 @@ export function MapPreview() {
     setCenter(map.getCenter())
   })
 
+  map?.on('zoom', function onDragEnd() {
+    const coordinates = getCornersCoordinates(map)
+    setCoordinatesCorners(coordinates)
+    setCenter(map.getCenter())
+  })
+
   const { data: points } = useQuery({
     queryKey: ['points', accessToken, coordinatesCorners, 'geojson'],
     queryFn: () => getPoints({ accessToken, coordinates: coordinatesCorners }),
     enabled: isAuthenticated,
+    staleTime: Infinity,
   })
 
   return (
@@ -43,8 +50,8 @@ export function MapPreview() {
       <MapContainer
         ref={(map) => setMap(map)}
         center={center}
-        zoom={13}
-        className="z-0 flex h-[700px] w-full rounded border border-border shadow-md"
+        zoom={12}
+        className="z-0 flex h-[80vh] w-full rounded border border-border shadow-md"
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

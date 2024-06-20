@@ -21,7 +21,12 @@ export async function getProductInfo({
   accessToken,
 }: ProductParams) {
   const response = await api(accessToken).get<ProductResponse>(
-    `/products/${productId}?tenantUuid=${tenantUuid}`,
+    `/products/${productId}`,
+    {
+      params: {
+        tenantUuid,
+      },
+    },
   )
   return response.data
 }

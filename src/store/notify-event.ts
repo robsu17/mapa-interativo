@@ -1,39 +1,58 @@
 import { create } from 'zustand'
 
 interface Message {
+  tenantUuid: string
   title: string
   text: string
 }
 
 interface MessagesStore {
   messages: Message[] | []
-  setMessage: (message: Message) => void
-  clearMessages: () => void
-  clearMessage: (message: Message) => void
+  setMessage: (messageToAdd: Message) => void
+  clearMessages: (tenantUuidToRem: string) => void
+  clearMessage: (messageToRem: Message) => void
 }
 
 export const useMessagesStore = create<MessagesStore>((set) => ({
   messages: [],
   tenantUuid: null,
-  setMessage(message) {
+  setMessage(messageToAdd) {
     set((state) => {
-      if (state.messages.length >= 5) {
+      if (state.messages.length >= 100) {
         return {
-          messages: [...state.messages],
+          messages: [
+            ...state.messages.filter(
+              (message) => message.tenantUuid === messageToAdd.tenantUuid,
+            ),
+          ],
         }
       }
 
       return {
-        messages: [...state.messages, message],
+        messages: [...state.messages, messageToAdd],
       }
     })
   },
-  clearMessages() {
-    set({ messages: [] })
+  clearMessages(tenantUuidToRem) {
+    set((state) => {
+      return {
+        messages: [
+          ...state.messages.filter(
+            (message) => message.tenantUuid !== tenantUuidToRem,
+          ),
+        ],
+      }
+    })
   },
-  clearMessage(message) {
+  clearMessage(messageToRem) {
     set((state) => ({
-      messages: state.messages.filter((item) => item.text !== message.text),
+      messages: [
+        ...state.messages.filter(
+          (message) =>
+            message.tenantUuid === messageToRem.tenantUuid &&
+            message.text !== messageToRem.text,
+        ),
+      ],
     }))
   },
 }))
