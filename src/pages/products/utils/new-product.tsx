@@ -14,20 +14,25 @@ import { useTenantStore } from '@/store/tenant'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import { redirect, useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import { InputNumberFormat } from '@react-input/number-format'
+import { useState } from 'react'
 
 const newProductSchema = z.object({
   name: z.string().min(1, 'Nome do produto é obrigatório'),
   description: z.string().min(1, 'Descrição do produto é obrigatório'),
-  price: z.coerce.number().nonnegative('Preço não pode ser menor do que 0'),
+  price: z.coerce
+    .number()
+    .nonnegative('O preço não pode ser negativo')
+    .min(1, 'Preço não pode ser vazio'),
 })
 
 type NewProduct = z.infer<typeof newProductSchema>
 
 export function NewProduct() {
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const pageIndex = z.coerce
     .number()
@@ -40,11 +45,14 @@ export function NewProduct() {
   const accessToken = useAuthStore((state) => state.accessToken)
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
+  const [valueFormatted, setValueFormatted] = useState<string>('')
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<NewProduct>({
     resolver: zodResolver(newProductSchema),
   })
@@ -65,6 +73,11 @@ export function NewProduct() {
           totalItems: cached.totalItems + 1,
           products: [...cached.products, data],
         })
+      } else {
+        setSearchParams((state) => {
+          state.set('page', (pageIndex + 2).toString())
+          return state
+        })
       }
 
       toast.success('Produto adicionado com sucesso.')
@@ -80,10 +93,12 @@ export function NewProduct() {
       return
     }
 
+    const priceInCents = Math.ceil(data.price * 100)
+
     await newProductFn({
       name: data.name,
       description: data.description,
-      price: data.price,
+      price: priceInCents,
       tenantUuid,
       accessToken,
     })
@@ -93,6 +108,8 @@ export function NewProduct() {
       description: '',
       price: 0,
     })
+
+    setValueFormatted('')
   }
 
   return (
@@ -107,6 +124,7 @@ export function NewProduct() {
             id="name"
             type="text"
             placeholder="Nome do produto"
+            autoComplete="off"
             className="mt-1"
             {...register('name')}
           />
@@ -126,12 +144,17 @@ export function NewProduct() {
           <Label className="text-rose-500" htmlFor="price">
             {errors.price && errors.price.message}
           </Label>
-          <Input
-            id="name"
-            type="number"
-            placeholder="Preço"
-            className="mt-1"
-            {...register('price')}
+          <InputNumberFormat
+            name="price"
+            className="mt-1 w-full rounded-md border border-border p-2"
+            autoComplete="off"
+            placeholder="R$ 1,00"
+            locales="pt-BR"
+            value={valueFormatted}
+            onChange={(e) => setValueFormatted(e.target.value)}
+            onNumberFormat={(e) => setValue('price', e.detail.number)}
+            format="currency"
+            currency="BRL"
           />
         </div>
         <div className="grid grid-cols-2 gap-4">

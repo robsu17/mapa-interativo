@@ -28,7 +28,7 @@ export function ProductTableRow({ product }: ProductsRowProps) {
       <TableCell>{product.id}</TableCell>
       <TableCell>{product.name}</TableCell>
       <TableCell>{product.description}</TableCell>
-      <TableCell>{priceFormatter.format(product.price)}</TableCell>
+      <TableCell>{priceFormatter.format(product.price / 100)}</TableCell>
     </TableRow>
   )
 }

@@ -44,6 +44,12 @@ importers:
       '@radix-ui/react-toast':
         specifier: ^1.1.5
         version: 1.1.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@react-input/mask':
+        specifier: ^1.2.5
+        version: 1.2.5(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@react-input/number-format':
+        specifier: ^1.0.27
+        version: 1.0.27(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query':
         specifier: ^5.45.1
         version: 5.45.1(react@18.3.1)
@@ -80,6 +86,9 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.6.4
         version: 0.6.4(prettier@3.3.2)
+      primereact:
+        specifier: ^10.6.6
+        version: 10.6.6(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       qs:
         specifier: ^6.12.1
         version: 6.12.1
@@ -1273,6 +1282,36 @@ packages:
     resolution: {integrity: sha512-O3s9qhPMd6n42x9sKeJ3lhu5V1Tlnzhu6Yk8QOvDuXf7UGuUjXf9mzfHJt1dYzID4l9Fwm8toczBzPM9t0jc8Q==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
+
+  '@react-input/core@1.0.12':
+    resolution: {integrity: sha512-lZDQjphsJenWCD0mcflsyneLnb2a7bFAgAVzih9diEcUjKopcK+QOXhz0a0PHEp8k5LEKpYadjwyltAGOOhL2g==}
+    peerDependencies:
+      '@types/react': '>=16.8'
+      react: '>=16.8'
+      react-dom: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@react-input/mask@1.2.5':
+    resolution: {integrity: sha512-xouBATnitQqhgKLgu6/J2IZRu7kzqm/tFw2ToFnk6EkRzWs5dawlcF8asASMu7LCDrCqSkjwN+/sscEMG7IXog==}
+    peerDependencies:
+      '@types/react': '>=16.8'
+      react: '>=16.8'
+      react-dom: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@react-input/number-format@1.0.27':
+    resolution: {integrity: sha512-3DxRn7rwWDl4VcSVrkS5B7o6JDsj3gfhHjJKJmHzJ7rKGXHv5+9GJ0mXOShrDGTESfbpLcqcOe+GRDcQ+oWxJQ==}
+    peerDependencies:
+      '@types/react': '>=16.8'
+      react: '>=16.8'
+      react-dom: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   '@react-leaflet/core@2.1.0':
     resolution: {integrity: sha512-Qk7Pfu8BSarKGqILj4x7bCSZ1pjuAPZ+qmRwH5S7mDS91VSbVVsJSrW4qA+GPrro8t69gFYVMWb1Zc4yFmPiVg==}
@@ -2841,6 +2880,17 @@ packages:
     resolution: {integrity: sha512-rAVeHYMcv8ATV5d508CFdn+8/pHPpXeIid1DdrPwXnaAdH7cqjVbpJaT5eq4yRAFU/lsbwYwSF/n5iNrdJHPQA==}
     engines: {node: '>=14'}
     hasBin: true
+
+  primereact@10.6.6:
+    resolution: {integrity: sha512-+C0Bt6vS/jh09DQVS4UXpVctbvqJDUC3t3mVdGmhmIINYD8kdfL3fvc3bUGniGxkKKzwkSYdAQXhZlcgj8LUgw==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0
+      react: ^17.0.0 || ^18.0.0
+      react-dom: ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
@@ -4464,6 +4514,29 @@ snapshots:
       '@swc/helpers': 0.5.11
       clsx: 2.1.1
       react: 18.3.1
+
+  '@react-input/core@1.0.12(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.3
+
+  '@react-input/mask@1.2.5(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@react-input/core': 1.0.12(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.3
+
+  '@react-input/number-format@1.0.27(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@react-input/core': 1.0.12(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.3
 
   '@react-leaflet/core@2.1.0(leaflet@1.9.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -6148,6 +6221,15 @@ snapshots:
       prettier: 3.3.2
 
   prettier@3.3.2: {}
+
+  primereact@10.6.6(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@types/react-transition-group': 4.4.10
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-transition-group: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.3
 
   prop-types@15.8.1:
     dependencies:

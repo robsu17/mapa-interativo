@@ -12,6 +12,7 @@ import { NewProduct } from './utils/new-product'
 import { useAuthStore } from '@/store/auth'
 import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
+import { useEffect } from 'react'
 
 export function Products() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -37,6 +38,15 @@ export function Products() {
       return prev
     })
   }
+
+  useEffect(() => {
+    if (data && data.products.length < 1) {
+      setSearchParams((state) => {
+        state.set('page', (1).toString())
+        return state
+      })
+    }
+  }, [data, setSearchParams, tenantUuid])
 
   return (
     <>
