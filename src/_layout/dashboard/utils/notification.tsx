@@ -17,7 +17,6 @@ import { useAuthStore } from '@/store/auth'
 export function Notification() {
   const messages = useMessagesStore((state) => state.messages)
   const clearMessage = useMessagesStore((state) => state.clearMessage)
-  const [checkedMessages, setCheckedMessages] = useState(false)
 
   const tenantUuid = useTenantStore((state) => state.tenantUuid)
   const setMessages = useMessagesStore((state) => state.setMessage)
@@ -81,8 +80,7 @@ export function Notification() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          onClick={() => setCheckedMessages(true)}
-          className={`${messages.length > 1 && !checkedMessages ? 'animate-pulse text-blue-500' : ''}`}
+          className={`${messages.length >= 1 ? 'animate-pulse text-blue-500' : ''}`}
         >
           {messages.length >= 1 ? <BellRing /> : <Bell />}
         </button>
