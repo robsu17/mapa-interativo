@@ -10,7 +10,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useAuthStore } from '@/store/auth'
 import { useTenantStore } from '@/store/tenant'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 const navigation = [
@@ -24,18 +23,13 @@ export function Navigation() {
   const accessToken = useAuthStore((state) => state.accessToken)
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const changeTenant = useTenantStore((state) => state.changeTenant)
+  const tenantUuid = useTenantStore((state) => state.tenantUuid)
 
   const { data: tenants, isLoading } = useQuery({
     queryKey: ['tentants', accessToken],
     queryFn: () => getTenants({ accessToken }),
     enabled: isAuthenticated,
   })
-
-  useEffect(() => {
-    if (tenants) {
-      changeTenant(tenants[0].uuid)
-    }
-  }, [changeTenant, isLoading, tenants])
 
   return (
     <ul role="list" className="-mx-2 space-y-1">
@@ -44,7 +38,7 @@ export function Navigation() {
           <Skeleton className="h-10 w-full" />
         ) : (
           <Select
-            defaultValue={tenants && tenants[0].uuid}
+            defaultValue={tenantUuid}
             onValueChange={(value) => changeTenant(value)}
           >
             <SelectTrigger>
