@@ -81,7 +81,6 @@ export function SignIn() {
               type="email"
               autoComplete="off"
               placeholder="example@example.com"
-              className="border-none outline-none"
               {...register('email')}
             />
           </div>
@@ -97,7 +96,6 @@ export function SignIn() {
               id="password"
               type="password"
               placeholder="********"
-              className="border-none outline-none"
               {...register('password')}
             />
           </div>

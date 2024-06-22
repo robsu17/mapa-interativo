@@ -25,7 +25,7 @@ const newProductSchema = z.object({
   description: z.string().min(1, 'Descrição do produto é obrigatório'),
   price: z.coerce
     .number()
-    .nonnegative('O preço não pode ser negativo')
+    .nonnegative('O preço não pode ser menor que zero')
     .min(1, 'Preço não pode ser vazio'),
 })
 

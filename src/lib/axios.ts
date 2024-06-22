@@ -1,5 +1,4 @@
 import { env } from '@/env'
-import { useAuthStore } from '@/store/auth'
 import axios from 'axios'
 
 export const api = (accessToken: string | null = null) => {
@@ -9,6 +8,17 @@ export const api = (accessToken: string | null = null) => {
       Authorization: `Bearer ${accessToken}`,
     },
   })
+
+  api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response.status === 401) {
+        localStorage.removeItem('accessToken')
+        window.location.href = '/sign-in'
+      }
+      return Promise.reject(error)
+    },
+  )
 
   return api
 }
