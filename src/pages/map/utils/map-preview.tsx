@@ -99,7 +99,7 @@ export function MapPreview() {
                     {isLoadingAddress ? (
                       <Loading />
                     ) : (
-                      <div className="space-y-2 p-4">
+                      <div className="space-y-2">
                         <h1 className="text-center text-xl text-foreground">
                           {`${markerAddres?.road}, ${markerAddres?.postcode}`}
                         </h1>
