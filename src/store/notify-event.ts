@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-interface Message {
+export interface Message {
   tenantUuid: string
   title: string
   text: string
