@@ -18,6 +18,7 @@ export const useAuthStore = create<TenantStore>((set) => ({
   },
   logout() {
     localStorage.removeItem('accessToken')
+    localStorage.removeItem('tenantUuid-storage')
     set({ isAuthenticated: false, accessToken: null })
   },
   initializeAuth: () => {
