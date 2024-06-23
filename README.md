@@ -24,7 +24,7 @@ Desenvolver uma interface do usuário utilizando React com Vite e TailwindCSS ou
 #### 2. Listagem de Produtos
 
 - [x] **Tabela de Produtos**: Exibir uma tabela com a listagem de produtos paginada.
-- **Detalhes do Produto**: Ao clicar em uma linha da tabela, redirecionar para uma tela de detalhes do produto, exibindo suas informações completas.
+- [x] **Detalhes do Produto**: Ao clicar em uma linha da tabela, redirecionar para uma tela de detalhes do produto, exibindo suas informações completas.
 - [x] **Cadastro de Produto**: Incluir um botão para abrir um modal de cadastro de novo produto. No cadastro:
   - [x] Enviar de maneira transparente o tenant atual selecionado pelo usuário.
   - [x] Validar os campos do formulário:
