@@ -1,21 +1,23 @@
-FROM node:20 as build
-
-# RUN npm install -g pnpm
+FROM node:20-alpine as build
 
 WORKDIR /app
 
-COPY package-*.json ./
+ENV PATH /app/node_modules/.bin:$PATH
 
-COPY . .
+RUN npm install -g pnpm
 
-RUN npm install
+COPY package.json ./
+COPY pnpm-lock.yaml ./
 
-RUN npm run build
+RUN pnpm i
+COPY . ./
+RUN pnpm run build
 
-FROM nginx:alpine
+FROM nginx:stable-alpine
 
 COPY --from=build /app/dist /usr/share/nginx/html
+COPY ./docker/nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+EXPOSE 3000
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD [ "nginx", "-g", "daemon off;" ]
