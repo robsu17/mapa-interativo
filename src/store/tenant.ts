@@ -14,7 +14,7 @@ export const useTenantStore = create(
     }),
     {
       name: 'tenantUuid-storage',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 )

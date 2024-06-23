@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useAuthStore } from '@/store/auth'
 import { useTenantStore } from '@/store/tenant'
 import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 const navigation = [
@@ -31,30 +32,38 @@ export function Navigation() {
     enabled: isAuthenticated,
   })
 
+  useEffect(() => {
+    if (!tenantUuid && tenants) {
+      changeTenant(tenants[0].uuid)
+    }
+  }, [changeTenant, tenantUuid, tenants])
+
   return (
     <ul role="list" className="-mx-2 space-y-1">
       <div className="mb-10">
         {isLoading ? (
           <Skeleton className="h-10 w-full" />
         ) : (
-          <Select
-            defaultValue={tenantUuid}
-            onValueChange={(value) => changeTenant(value)}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {tenants &&
-                tenants.map((tenant) => {
-                  return (
-                    <SelectItem key={tenant.id} value={tenant.uuid}>
-                      {tenant.displayName}
-                    </SelectItem>
-                  )
-                })}
-            </SelectContent>
-          </Select>
+          tenantUuid && (
+            <Select
+              defaultValue={tenantUuid}
+              onValueChange={(value) => changeTenant(value)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {tenants &&
+                  tenants.map((tenant) => {
+                    return (
+                      <SelectItem key={tenant.id} value={tenant.uuid}>
+                        {tenant.displayName}
+                      </SelectItem>
+                    )
+                  })}
+              </SelectContent>
+            </Select>
+          )
         )}
       </div>
       {navigation.map((item) => (
